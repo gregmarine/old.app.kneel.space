@@ -1,9 +1,9 @@
 <ion-header-bar align-title="left" class="bar-dark">
-  <h1 class="title">KNEEL.SPACE</h1>
+  <h1 class="title">KNEEL.SPACE Sign Up</h1>
 </ion-header-bar>
 
 <ion-content>
-  <form ng-submit="passwordLogin()">
+  <form ng-submit="createUser()">
     <div class="list">
       <label class="item item-input item-floating-label">
         <span class="input-label">Email</span>
@@ -13,9 +13,13 @@
         <span class="input-label">Password</span>
         <input type="password" ng-model="loginData.password" placeholder="Password">
       </label>
+      <label class="item item-input item-floating-label">
+        <span class="input-label">Retype Password</span>
+        <input type="password" ng-model="loginData.retype_password" placeholder="Retype Password">
+      </label>
       <div class="item">
-        <button class="button button-outline button-balanced" type="submit">Log In</button>
-        <a href="" ng-click="signup()" style="vertical-align: bottom;">Sign Up</a>
+        <button class="button button-outline button-balanced" type="submit">Sign Up</button>
+        <a href="" ng-click="cancel()" style="vertical-align: bottom;" class="assertive">Cancel</a>
       </div>
     </div>
   </form>

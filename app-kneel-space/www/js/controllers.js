@@ -43,7 +43,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('LoginCtrl', function($scope, $state, Auth) {
+.controller('LoginCtrl', function($scope, $state, Auth, Message) {
   var _usersRef = new Firebase('https://intense-torch-8571.firebaseio.com/users');
   
   // With the new view caching in Ionic, Controllers are only called
@@ -65,24 +65,73 @@ angular.module('app.controllers', [])
       if(error) {
         switch (error.code) {
           case 'INVALID_EMAIL':
-            alert("The specified user account email is invalid.");
+            $scope.error = "The specified user account email is invalid.";
+            Message.timedAlert('Error', $scope.error, 'short');
             break;
           
           case 'INVALID_PASSWORD':
-            alert("The specified user account password is incorrect.");
+            $scope.error = "The specified user account password is incorrect.";
+            Message.timedAlert('Error', $scope.error, 'short');
             break;
           
           case 'INVALID_USER':
-            alert("The specified user account does not exist.");
+            $scope.error = "The specified user account does not exist.";
+            Message.timedAlert('Error', $scope.error, 'short');
             break;
           
           default:
-            alert("Error logging user in:", error);
+            $scope.error = "Error logging user in: " + error;
+            Message.timedAlert('Error', $scope.error, 'short');
         }
       } else {
         $state.go("app.playlists");
       }
     });
+  };
+  
+  $scope.signup = function() {
+    $state.go("signup");
+  };
+})
+
+.controller('SignupCtrl', function($scope, $state, $ionicPopup, $timeout, $ionicHistory, Auth, Message) {
+  var _usersRef = new Firebase('https://intense-torch-8571.firebaseio.com/users');
+  
+  // With the new view caching in Ionic, Controllers are only called
+  // when they are recreated or on app start, instead of every page change.
+  // To listen for when this page is active (for example, to refresh data),
+  // listen for the $ionicView.enter event:
+  // $scope.$on('$ionicView.enter', function(e) {
+  // });
+
+  // Form data for the login modal
+  $scope.loginData = {};
+  
+  $scope.createUser = function() {
+    $scope.message = null;
+    $scope.error = null;
+    
+    if($scope.loginData.password == $scope.loginData.retype_password) {
+      Auth.$createUser({
+        email: $scope.loginData.email,
+        password: $scope.loginData.password
+      }).then(function(authData) {
+        $scope.message = "User created successfully. You may login now.";
+        $state.go("login");
+        
+        Message.timedAlert('Success', $scope.message, 'short');
+      }).catch(function(error) {
+        $scope.error = error;
+        Message.timedAlert('Error', $scope.error, 'short');
+      });
+    } else {
+      $scope.error = "The passwords do not match.";
+      Message.timedAlert('Error', $scope.error, 'short');
+    }
+  };
+  
+  $scope.cancel = function() {
+    $ionicHistory.goBack();
   };
 })
 
