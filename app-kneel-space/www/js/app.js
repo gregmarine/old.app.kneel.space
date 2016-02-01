@@ -5,7 +5,7 @@
 // the 2nd parameter is an array of 'requires'
 // 'app.controllers' is found in controllers.js
 // 'app.services' is found in services.js
-angular.module('app', ['ionic', 'firebase', 'ngCordova', 'app.controllers', 'app.services'])
+angular.module('app', ['ionic', 'firebase', 'app.controllers', 'app.services'])
 
 .run(["$rootScope", "$state", "$ionicPlatform", function($rootScope, $state, $ionicPlatform) {
   $ionicPlatform.ready(function() {
