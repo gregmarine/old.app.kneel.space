@@ -1,0 +1,79 @@
+<ion-view view-title="My Account">
+ <ion-tabs class="tabs-striped tabs-top tabs-background-royal tabs-color-light">
+    <ion-tab title="Profile" icon-on="ion-person" icon-off="ion-person">
+      <div style="height: 90px;">_</div>
+      <div class="list">
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Full Name</span>
+          <input type="text" ng-model="profileData.fullname" placeholder="Full Name">
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Bio</span>
+          <textarea ng-model="profileData.bio" placeholder="Bio" style="height: 100px;"></textarea>
+        </label>
+        <div class="item text-right">
+          <button class="button button-clear button-balanced" ng-click="profileData.$save()">SAVE</button>
+        </div>
+      </div>
+    </ion-tab>
+    <ion-tab title="Email" icon-on="ion-at" icon-off="ion-at">
+      <div style="height: 90px;">_</div>
+      <form ng-submit="saveEmail()">
+        <div class="list">
+          <label class="item item-input item-floating-label">
+            <span class="input-label">New Email</span>
+            <input type="text" ng-model="emailData.new_email" placeholder="New Email">
+            <input type="hidden" ng-model="emailData.email">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Password</span>
+            <input type="password" ng-model="emailData.password" placeholder="Password">
+          </label>
+          <div class="item text-right">
+            <button class="button button-clear button-balanced" type="submit">SAVE</button>
+          </div>
+        </div>
+      </form>
+    </ion-tab>
+    <ion-tab title="Password" icon-on="ion-locked" icon-off="ion-locked">
+      <div style="height: 90px;">_</div>
+      <form ng-submit="savePassword()">
+        <div class="list">
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Current Password</span>
+            <input type="password" ng-model="passwordData.password" placeholder="Current Password">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">New Password</span>
+            <input type="password" ng-model="passwordData.new_password" placeholder="New Password">
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Retype Password</span>
+            <input type="password" ng-model="passwordData.retype_password" placeholder="Retype Password">
+          </label>
+          <div class="item text-right">
+            <button class="button button-clear button-balanced" type="submit">SAVE</button>
+          </div>
+        </div>
+      </form>
+    </ion-tab>
+    <ion-tab title="Delete" icon-on="ion-trash-b" icon-off="ion-trash-b">
+      <div style="height: 90px;">_</div>
+      <form ng-submit="deleteAccount()">
+        <div class="list">
+          <label class="item item-input">
+            <span class="input-label">Provide your password and tap <span class="assertive">DELETE</span>
+            to remove your account from the KNEEL.SPACE system. <span class="assertive">THIS CANNOT BE UNDONE</span>.</span>
+          </label>
+          <label class="item item-input item-floating-label">
+            <span class="input-label">Password</span>
+            <input type="password" ng-model="passwordData.password" placeholder="Password">
+          </label>
+          <div class="item text-right">
+            <button class="button button-clear button-assertive" type="submit">DELETE</button>
+          </div>
+        </div>
+      </form>
+    </ion-tab>
+  </ion-tabs>
+</ion-view>

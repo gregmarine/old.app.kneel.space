@@ -30,6 +30,32 @@ angular.module('app.services', [])
       $timeout(function() {
         alertPopup.close(); //close the popup after 3 seconds for some reason
       }, timeout);
+    },
+    
+    confirm: function(options) {
+      var confirmPopup = $ionicPopup.show({
+        template: options.message,
+        title: options.title,
+        subTitle: options.subTitle,
+        buttons: [
+          { text: options.negative_label,
+            onTap: function(e) {
+              return false;
+            }
+          },
+          {
+            text: options.positive_label,
+            type: 'button-positive',
+            onTap: function(e) {
+              return true;
+            }
+          }
+        ]
+      });
+      
+      confirmPopup.then(function(result) {
+        options.callback(result);
+      });
     }
   }
 }])

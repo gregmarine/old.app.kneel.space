@@ -56,6 +56,23 @@ angular.module('app', ['ionic', 'firebase', 'app.controllers', 'app.services'])
     controller: 'SignupCtrl'
   })
 
+  .state('app.account', {
+    url: '/account',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/account.html',
+        controller: 'AccountCtrl',
+        resolve: {
+          "currentAuth": ["Auth", function(Auth) {
+            // $requireAuth returns a promise so the resolve waits for it to complete
+            // If the promise is rejected, it will throw a $stateChangeError (see above)
+            return Auth.$requireAuth();
+          }]
+        }
+      }
+    }
+  })
+
   .state('app.search', {
     url: '/search',
     views: {
