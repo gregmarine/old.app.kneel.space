@@ -5,9 +5,10 @@
 // the 2nd parameter is an array of 'requires'
 // 'app.controllers' is found in controllers.js
 // 'app.services' is found in services.js
-angular.module('app', ['ionic', 'firebase', 'app.controllers', 'app.services'])
+angular.module('app', ['ionic', 'firebase', 'app.controllers', 'app.services', 'app.filters'])
 
 .run(["$rootScope", "$state", "$ionicPlatform", function($rootScope, $state, $ionicPlatform) {
+  
   $ionicPlatform.ready(function() {
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
@@ -73,11 +74,12 @@ angular.module('app', ['ionic', 'firebase', 'app.controllers', 'app.services'])
     }
   })
 
-  .state('app.search', {
-    url: '/search',
+  .state('app.prayerlists', {
+    url: '/prayerlists',
     views: {
       'menuContent': {
-        templateUrl: 'templates/search.html',
+        templateUrl: 'templates/prayerlists.html',
+        controller: 'PrayerListsCtrl',
         resolve: {
           "currentAuth": ["Auth", function(Auth) {
             // $requireAuth returns a promise so the resolve waits for it to complete
@@ -89,11 +91,12 @@ angular.module('app', ['ionic', 'firebase', 'app.controllers', 'app.services'])
     }
   })
 
-  .state('app.browse', {
-    url: '/browse',
+  .state('app.prayerlist', {
+    url: '/prayerlists/:prayerlistId',
     views: {
       'menuContent': {
-        templateUrl: 'templates/browse.html',
+        templateUrl: 'templates/prayerlist.html',
+        controller: 'PrayerListCtrl',
         resolve: {
           "currentAuth": ["Auth", function(Auth) {
             // $requireAuth returns a promise so the resolve waits for it to complete
@@ -101,36 +104,10 @@ angular.module('app', ['ionic', 'firebase', 'app.controllers', 'app.services'])
             return Auth.$requireAuth();
           }]
         }
-      }
-    }
-  })
-  
-  .state('app.playlists', {
-    url: '/playlists',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlists.html',
-        controller: 'PlaylistsCtrl',
-        resolve: {
-          "currentAuth": ["Auth", function(Auth) {
-            // $requireAuth returns a promise so the resolve waits for it to complete
-            // If the promise is rejected, it will throw a $stateChangeError (see above)
-            return Auth.$requireAuth();
-          }]
-        }
-      }
-    }
-  })
-
-  .state('app.single', {
-    url: '/playlists/:playlistId',
-    views: {
-      'menuContent': {
-        templateUrl: 'templates/playlist.html',
-        controller: 'PlaylistCtrl'
       }
     }
   });
+  
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/login');
+  $urlRouterProvider.otherwise('/app/prayerlists');
 });

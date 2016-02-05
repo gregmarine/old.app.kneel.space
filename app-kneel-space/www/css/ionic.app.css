@@ -9733,3 +9733,43 @@ a.button {
 
 .button-round {
   border-radius: 50% !important; }
+
+.float-button {
+  -webkit-border-radius: 50%;
+  -moz-border-radius: 50%;
+  border-radius: 50%;
+  width: 28px;
+  padding: 28px;
+  font-size: 20px;
+  background: #ef473a;
+  position: fixed;
+  bottom: 20px;
+  /* Adjust to where you want it */
+  right: 20px;
+  /* Adjust to where you want it */
+  box-shadow: 0px 2px 20px -5px black;
+  z-index: 9999; }
+
+.float-button .height_fix {
+  margin-top: 100%; }
+
+.float-button .content {
+  position: absolute;
+  left: 0;
+  top: 50%;
+  height: 100%;
+  width: 100%;
+  text-align: center;
+  margin-top: -10px;
+  /* Note, this must be half the font size */
+  color: #fff; }
+
+.item-icon {
+  margin-right: 10px;
+  color: #387ef5; }
+
+.handle-icon {
+  color: #387ef5;
+  position: absolute;
+  top: 5px;
+  left: 10px; }
