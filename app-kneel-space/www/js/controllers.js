@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
 
-.controller('AppCtrl', function($scope, $ionicModal, $timeout, Auth) {
+.controller('AppCtrl', function($rootScope, $scope, $ionicModal, $timeout, Auth) {
   var _usersRef = new Firebase('https://intense-torch-8571.firebaseio.com/users');
   
   Auth.$onAuth(function(authData) {
@@ -91,7 +91,7 @@ angular.module('app.controllers', [])
             Message.timedAlert('Error', $scope.error, 'short');
         }
       } else {
-        $state.go("app.playlists");
+        $state.go("app.prayerlists");
       }
     });
   };
@@ -253,16 +253,109 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PlaylistsCtrl', function($scope) {
-  $scope.playlists = [
-    { title: 'Reggae', id: 1 },
-    { title: 'Chill', id: 2 },
-    { title: 'Dubstep', id: 3 },
-    { title: 'Indie', id: 4 },
-    { title: 'Rap', id: 5 },
-    { title: 'Cowbell', id: 6 }
-  ];
+.controller('PrayerListsCtrl', function($rootScope, $scope, $ionicModal, $ionicListDelegate, $firebaseArray, $firebaseObject, Auth, Message) {
+  $scope.pinnedonly = false;
+  
+  var authData = Auth.$getAuth();
+  var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists');
+  
+  var query = ref.orderByChild("title");
+  $scope.prayerlists = $firebaseArray(query);
+  
+  $scope.prayerListData = {
+    title: "",
+    desc: ""
+  };
+  
+  $ionicModal.fromTemplateUrl('edit-prayerlist.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+
+  $scope.pinPrayerList = function(list) {
+    $ionicListDelegate.closeOptionButtons();
+    
+    if(list.pinned) {
+      list.pinned = false;
+    } else {
+      list.pinned = true;
+    }
+    
+    $scope.prayerlists.$save(list);
+  }
+  
+  $scope.newPrayerList = function() {
+    $scope.newList = true;
+    $scope.modal.show();
+  };
+  
+  $scope.editPrayerList = function(list) {
+    $ionicListDelegate.closeOptionButtons();
+    $scope.newList = false;
+    $scope.prayerListData = list;
+    $scope.modal.show();
+  };
+  
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };
+  
+  $scope.savePrayerList = function() {
+    var list = {
+      title: $scope.prayerListData.title,
+      desc: $scope.prayerListData.desc
+    }
+    
+    if($scope.newList) {
+      $scope.prayerlists.$add(list);
+    } else {
+      $scope.prayerlists.$save($scope.prayerListData);
+    }
+    
+    $scope.modal.hide();
+    
+    $scope.prayerListData = {
+      title: "",
+      desc: ""
+    };
+  };
+  
+  $scope.deleteList = function(list) {
+    $ionicListDelegate.closeOptionButtons();
+    $scope.message = null;
+    $scope.error = null;
+    
+    // 1. Confirm
+    var options = {
+      title: "Delete " + list.title,
+      subTitle: "Are you sure you would like to delete your " + list.title + " prayer list?",
+      message: "THIS CANNOT BE UNDONE!",
+      positive_label: "GOOD BYE!",
+      negative_label: "NEVER MIND",
+      callback: function(result) {
+        if(result) {
+          // 2. Remove list from user's prayer lists
+          $scope.prayerlists.$remove(list).then(function(ref) {
+            $scope.message = "Your prayer list was successfully removed!";
+            Message.timedAlert('Success', $scope.message, 'short');
+          }, function(error) {
+            $scope.error = error;
+            Message.timedAlert('Error', $scope.error, 'long');
+          });
+        }
+      }
+    };
+    Message.confirm(options);
+  };
 })
 
-.controller('PlaylistCtrl', function($scope, $stateParams) {
+.controller('PrayerListCtrl', function($scope, $firebaseArray) {
+  // var authData = Auth.$getAuth();
+  // var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + "/prayerlists");
+  // $scope.prayerlists = $firebaseArray(ref);
+})
+
+.controller('PrayerListCtrl', function($scope, $stateParams) {
 });

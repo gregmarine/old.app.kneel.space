@@ -17,6 +17,9 @@ platform available on-the-go is what this project is all about.
 
 ## Technology
 
+Everything is built [#OnCloud9](https://c9.io/) and uses the following libraries, 
+frameworks and services.
+
 - [Apache Cordova](https://cordova.apache.org/)
 - [Ionic Framework](http://ionicframework.com/)
 - [Firebase BaaS](https://www.firebase.com/)
@@ -27,7 +30,7 @@ Android
 ToDo: Add link to Google Play entry for the app.
 
 iOS
-Not currently supported.
+Not currently supported. Support is planned in the future.
 
 ## Authors
 

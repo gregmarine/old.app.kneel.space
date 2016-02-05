@@ -1,0 +1,59 @@
+<ion-view view-title="My Prayer Lists">
+  <ion-content>
+    <div class="text-right">
+      <label class="toggle toggle-positive">
+        <input type="checkbox" ng-model="pinnedonly">
+        <div class="track">
+          <div class="handle">
+            <i class="handle-icon icon ion-pin"></i>
+          </div>
+        </div>
+      </label>
+    </div>
+    
+    <ion-list can-swipe="true">
+      <ion-item collection-repeat="prayerlist in prayerlists | filterPinned:pinnedonly" href="#/app/prayerlists/{{prayerlist.id}}">
+        <i class="item-icon icon ion-pin" ng-show="prayerlist.pinned"></i>
+        
+        {{prayerlist.title}}
+        
+        <!-- Action buttons -->
+        <ion-option-button class="button-assertive icon ion-trash-b" ng-click="deleteList(prayerlist)"></ion-option-button>
+        <ion-option-button class="button-balanced icon ion-compose" ng-click="editPrayerList(prayerlist)"></ion-option-button>
+        <ion-option-button class="button-positive icon ion-pin" ng-click="pinPrayerList(prayerlist)"></ion-option-button>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+  
+  <div class="float-button" ng-click="newPrayerList()">
+    <span class="height-fix">
+      <a class="content">
+        <i class="ion-plus"> </i>
+      </a>
+    </span>
+  </div>
+</ion-view>
+
+<script id="edit-prayerlist.html" type="text/ng-template">
+  <ion-modal-view>
+    <ion-header-bar>
+      <h1 class="title">Prayer List</h1>
+    </ion-header-bar>
+    <ion-content>
+      <div class="list">
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Title</span>
+          <input type="text" ng-model="prayerListData.title" placeholder="Title">
+        </label>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">Description</span>
+          <textarea ng-model="prayerListData.desc" placeholder="Description" style="height: 100px;"></textarea>
+        </label>
+        <div class="item text-right">
+          <button class="button button-clear button-dark" ng-click="closeModal()">CANCEL</button>
+          <button class="button button-clear button-balanced" ng-click="savePrayerList()">OK</button>
+        </div>
+      </div>
+    </ion-content>
+  </ion-modal-view>
+</script>
