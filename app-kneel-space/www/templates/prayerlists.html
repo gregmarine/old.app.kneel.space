@@ -12,7 +12,7 @@
     </div>
     
     <ion-list can-swipe="true">
-      <ion-item collection-repeat="prayerlist in prayerlists | filterPinned:pinnedonly" href="#/app/prayerlists/{{prayerlist.id}}">
+      <ion-item collection-repeat="prayerlist in prayerlists | filterPinned:pinnedonly" href="#/app/prayerlists/{{prayerlist.$id}}">
         <i class="item-icon icon ion-pin" ng-show="prayerlist.pinned"></i>
         
         {{prayerlist.title}}
