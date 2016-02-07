@@ -1,26 +1,21 @@
-<ion-header-bar align-title="left" class="bar-dark">
-  <h1 class="title">KNEEL.SPACE Sign Up</h1>
-</ion-header-bar>
-
 <ion-content>
-  <form ng-submit="createUser()">
-    <div class="list">
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Email</span>
-        <input type="text" ng-model="loginData.email" placeholder="Email">
-      </label>
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Password</span>
-        <input type="password" ng-model="loginData.password" placeholder="Password">
-      </label>
-      <label class="item item-input item-floating-label">
-        <span class="input-label">Retype Password</span>
-        <input type="password" ng-model="loginData.retype_password" placeholder="Retype Password">
-      </label>
-      <div class="item">
-        <button class="button button-outline button-balanced" type="submit">Sign Up</button>
-        <a href="" ng-click="cancel()" style="vertical-align: bottom;" class="assertive">Cancel</a>
-      </div>
+  <img src="img/icon_120x120.png" class="center"></img>
+  <div class="list">
+    <label class="item item-input item-floating-label">
+      <span class="input-label">Email</span>
+      <input type="text" ng-model="loginData.email" placeholder="Email">
+    </label>
+    <label class="item item-input item-floating-label">
+      <span class="input-label">Password</span>
+      <input type="password" ng-model="loginData.password" placeholder="Password">
+    </label>
+    <label class="item item-input item-floating-label">
+      <span class="input-label">Retype Password</span>
+      <input type="password" ng-model="loginData.retype_password" placeholder="Retype Password">
+    </label>
+    <div class="item text-right">
+      <button ng-click="cancel()" class="button button-clear button-stable">Cancel</button>
+      <button ng-click="createUser()" class="button button-clear button-balanced">Sign Up</button>
     </div>
-  </form>
+  </div>
 </ion-content>
