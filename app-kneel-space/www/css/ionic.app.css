@@ -9773,3 +9773,8 @@ a.button {
   position: absolute;
   top: 5px;
   left: 10px; }
+
+.center {
+  margin-left: auto;
+  margin-right: auto;
+  display: block; }
