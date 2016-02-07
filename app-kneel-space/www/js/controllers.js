@@ -287,6 +287,11 @@ angular.module('app.controllers', [])
   }
   
   $scope.newPrayerList = function() {
+    $scope.prayerListData = {
+      title: "",
+      desc: ""
+    };
+    
     $scope.newList = true;
     $scope.modal.show();
   };
@@ -315,11 +320,6 @@ angular.module('app.controllers', [])
     }
     
     $scope.modal.hide();
-    
-    $scope.prayerListData = {
-      title: "",
-      desc: ""
-    };
   };
   
   $scope.deleteList = function(list) {
