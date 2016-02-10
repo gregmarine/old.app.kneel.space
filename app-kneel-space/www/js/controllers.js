@@ -404,6 +404,10 @@ angular.module('app.controllers', [])
     $scope.newCard = false;
     $scope.prayerCardData = card;
     
+    if(!$scope.prayerCardData.comments) {
+      $scope.prayerCardData.comments = [];
+    }
+    
     $scope.data.comment = "";
   
     $scope.modal.show();
