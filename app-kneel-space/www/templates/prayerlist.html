@@ -17,7 +17,7 @@
     {{prayerlist.desc}}
     
     <ion-list>
-      <div collection-repeat="prayercard in prayercards | filterPinned:pinnedonly" class="card">
+      <div collection-repeat="prayercard in prayercards | filterPinned:pinnedonly" class="list card">
         
         <ion-header-bar align-title="left" class="bar-stable">
           <h1 class="title">{{prayercard.title}}</h1>
@@ -30,8 +30,16 @@
         </ion-header-bar>
         
         <div class="item item-text-wrap" style="margin-top: 43px;">
-          <md ng-model="prayercard.body"></md>
+          <!--<md ng-model="prayercard.body"></md>-->
+          {{prayercard.body}}
         </div>
+        
+        <ion-footer-bar>
+          <div class="item-note">
+            <i class="icon ion-chatbubble" style="font-size: 24px;"></i>
+            {{prayercard.comments.length}}
+          </div>
+        </ion-footer-bar>
       </div>
     </ion-list>
   </ion-content>

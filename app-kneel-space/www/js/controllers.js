@@ -364,8 +364,11 @@ angular.module('app.controllers', [])
   
   $scope.prayerCardData = {
     title: "",
-    body: ""
+    body: "",
+    comments: []
   };
+  
+  $scope.data = {comment: ""};
   
   $ionicModal.fromTemplateUrl('templates/edit-prayercard.html', {
     scope: $scope,
@@ -385,6 +388,14 @@ angular.module('app.controllers', [])
   }
 
   $scope.newPrayerCard = function() {
+    $scope.prayerCardData = {
+      title: "",
+      body: "",
+      comments: []
+    };
+    
+    $scope.data.comment = "";
+  
     $scope.newCard = true;
     $scope.modal.show();
   };
@@ -392,6 +403,9 @@ angular.module('app.controllers', [])
   $scope.editPrayerCard = function(card) {
     $scope.newCard = false;
     $scope.prayerCardData = card;
+    
+    $scope.data.comment = "";
+  
     $scope.modal.show();
   };
   
@@ -399,10 +413,17 @@ angular.module('app.controllers', [])
     $scope.modal.hide();
   };
   
+  $scope.addComment = function() {
+    $scope.prayerCardData.comments.unshift({text: $scope.data.comment});
+    
+    $scope.data.comment = "";
+  };
+  
   $scope.savePrayerCard = function() {
     var card = {
       title: $scope.prayerCardData.title,
-      body: $scope.prayerCardData.body
+      body: $scope.prayerCardData.body,
+      comments: $scope.prayerCardData.comments
     }
     
     if($scope.newCard) {
@@ -415,8 +436,11 @@ angular.module('app.controllers', [])
     
     $scope.prayerCardData = {
       title: "",
-      desc: ""
+      desc: "",
+      comments: []
     };
+    
+    $scope.data.comment = "";
   };
   
   $scope.deleteCard = function(card) {

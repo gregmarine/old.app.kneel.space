@@ -12,10 +12,29 @@
         <span class="input-label">Body</span>
         <textarea ng-model="prayerCardData.body" placeholder="Body" style="height: 100px;"></textarea>
       </label>
-      <div class="item text-right">
-        <button class="button button-clear button-dark" ng-click="closeModal()">CANCEL</button>
-        <button class="button button-clear button-balanced" ng-click="savePrayerCard()">OK</button>
+      
+      <!-- comments -->
+      <div>
+        <label class="item item-input item-floating-label">
+          <span class="input-label">New Comment</span>
+          <textarea ng-model="data.comment" placeholder="Write a Comment" style="height: 60px;"></textarea>
+        </label>
+        <div class="item">
+          <button class="button button-balanced" ng-click="addComment()">Save Comment</button>
+        </div>
+        <label class="item">
+          <span class="input-label">Comments</span>
+        </label>
+        <div collection-repeat="comment in prayerCardData.comments | filterPinned:pinnedonly" class="list">
+          <div class="item item-text-wrap">
+            {{comment.text}}
+          </div>
+        </div>
       </div>
     </div>
   </ion-content>
+  <ion-footer-bar class="text-right">
+    <button class="button button-clear button-dark" ng-click="closeModal()">CANCEL</button>
+    <button class="button button-clear button-balanced" ng-click="savePrayerCard()">OK</button>
+  </ion-footer-bar>
 </ion-modal-view>
