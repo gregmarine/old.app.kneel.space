@@ -466,7 +466,7 @@ angular.module('app.controllers', [])
   var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists/' + $scope.prayerlistId + '/cards/' + $scope.prayercardId);
 
   $scope.prayercard = $firebaseObject(ref);
-
+    
   $scope.data = {comment: ""};
   
   $ionicModal.fromTemplateUrl('templates/edit-prayercard.html', {
@@ -496,6 +496,10 @@ angular.module('app.controllers', [])
   };
   
   $scope.addComment = function() {
+    if(!$scope.prayercard.comments) {
+      $scope.prayercard.comments = [];
+    }
+
     $scope.prayercard.comments.unshift({text: $scope.data.comment});
     
     $scope.data.comment = "";
