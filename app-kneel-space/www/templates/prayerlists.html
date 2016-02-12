@@ -1,6 +1,7 @@
 <ion-view view-title="My Prayer Lists">
-  <ion-content>
-    <div class="text-right">
+  <ion-nav-buttons side="secondary">
+    <!-- Pinned Only toggle -->
+    <div class="text-right" ng-click="togglePinnedOnly()" style="margin-top: 5px;">
       <label class="toggle toggle-positive">
         <input type="checkbox" ng-model="pinnedonly">
         <div class="track">
@@ -10,11 +11,11 @@
         </div>
       </label>
     </div>
-    
+  </ion-nav-buttons>
+  <ion-content>
     <ion-list can-swipe="true">
-      <ion-item collection-repeat="prayerlist in prayerlists | filterPinned:pinnedonly" href="#/app/prayerlists/{{prayerlist.$id}}">
-        <i class="item-icon icon ion-pin" ng-show="prayerlist.pinned"></i>
-        
+      <ion-item ng-repeat="prayerlist in prayerlists | filterPinned:pinnedonly" href="#/app/prayerlists/{{prayerlist.$id}}">
+        <i class="icon {{prayerlist.pinned ? 'ion-pin positive' : 'ion-ios-list-outline'}} list-item-icon"></i>
         {{prayerlist.title}}
         
         <!-- Action buttons -->

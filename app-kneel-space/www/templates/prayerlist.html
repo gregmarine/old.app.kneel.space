@@ -1,7 +1,7 @@
 <ion-view view-title="My Prayer Cards">
-  <div class="bar bar-subheader" style="clear: both;">
-    <h2 class="title">{{prayerlist.title}}</h2>
-    <div class="text-right">
+  <ion-nav-buttons side="secondary">
+    <!-- Pinned Only toggle -->
+    <div class="text-right" ng-click="togglePinnedOnly()" style="margin-top: 5px;">
       <label class="toggle toggle-positive">
         <input type="checkbox" ng-model="pinnedonly">
         <div class="track">
@@ -11,36 +11,30 @@
         </div>
       </label>
     </div>
+  </ion-nav-buttons>
+  <div class="bar bar-subheader">
+    <h2 class="title">{{prayerlist.title}}</h2>
   </div>
   <ion-content style="margin-top: 43px;">
     
     {{prayerlist.desc}}
     
-    <ion-list>
-      <div collection-repeat="prayercard in prayercards | filterPinned:pinnedonly" class="list card">
+    <ion-list can-swipe="true">
+      <ion-item ng-repeat="prayercard in prayercards | filterPinned:pinnedonly" href="#/app/prayerlists/{{prayerlist.$id}}/cards/{{prayercard.$id}}">
+        <i class="icon {{prayercard.pinned ? 'ion-pin positive' : 'ion-ios-photos-outline'}} list-item-icon"></i>
+        {{prayercard.title}}
         
-        <ion-header-bar align-title="left" class="bar-stable">
-          <h1 class="title">{{prayercard.title}}</h1>
-          
-          <div class="buttons">
-            <button class="button button-clear button-stable button-icon ion-trash-b" ng-click="deleteCard(prayercard)"></button>
-            <button class="button button-clear button-stable button-icon ion-compose" ng-click="editPrayerCard(prayercard)"></button>
-            <button class="button button-clear {{prayercard.pinned ? 'button-positive' : 'button-stable'}} button-icon ion-pin" ng-click="pinPrayerCard(prayercard)"></button>
-          </div>
-        </ion-header-bar>
+        <!--<span class="badge badge-stable" style="right: 64px;">0</span>-->
+        <span class="badge badge-stable">
+          <i class="icon ion-chatbubble list-item-icon" style="font-size: 22px; margin-right: 2px;"></i>
+          {{prayercard.comments.length}}
+        </span>
         
-        <div class="item item-text-wrap" style="margin-top: 43px;">
-          <!--<md ng-model="prayercard.body"></md>-->
-          {{prayercard.body}}
-        </div>
-        
-        <ion-footer-bar>
-          <div class="item-note">
-            <i class="icon ion-chatbubble" style="font-size: 24px;"></i>
-            {{prayercard.comments.length}}
-          </div>
-        </ion-footer-bar>
-      </div>
+        <!-- Action buttons -->
+        <ion-option-button class="button-assertive icon ion-trash-b" ng-click="deleteCard(prayercard)"></ion-option-button>
+        <!--<ion-option-button class="button-balanced icon ion-compose" ng-click="openPrayerCard(prayerlist.$id, prayercard.$id)"></ion-option-button>-->
+        <ion-option-button class="button-positive icon ion-pin" ng-click="pinPrayerCard(prayercard)"></ion-option-button>
+      </ion-item>
     </ion-list>
   </ion-content>
   

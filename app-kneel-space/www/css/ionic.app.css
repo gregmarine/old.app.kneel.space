@@ -9785,3 +9785,11 @@ a.button {
 
 .bar {
   height: 48px; }
+
+.list-item-icon {
+  font-size: 32px;
+  margin-top: -6px;
+  margin-right: 10px;
+  margin-bottom: -6px;
+  display: inline-block;
+  vertical-align: top; }
