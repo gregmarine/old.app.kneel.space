@@ -41,12 +41,17 @@ angular.module('app.controllers', [])
   }
   
   $scope.logout = function() {
+    $ionicLoading.show({
+      template: 'Logging Out...',
+      duration: 2000
+    });
+    
     _usersRef.unauth();
     window.location.reload(true);
   };
 })
 
-.controller('LoginCtrl', function($scope, $state, Auth, Message) {
+.controller('LoginCtrl', function($scope, $state, $ionicLoading, Auth, Message) {
   var _usersRef = new Firebase('https://intense-torch-8571.firebaseio.com/users');
   
   if(Auth.$getAuth()) {
@@ -65,11 +70,17 @@ angular.module('app.controllers', [])
 
   // Perform the login action when the user submits the login form
   $scope.passwordLogin = function() {
+    $ionicLoading.show({
+      template: 'Logging In...'
+    });
+    
     _usersRef.authWithPassword({
       email: $scope.loginData.email,
       password: $scope.loginData.password
     }, function(error, authData) {
       if(error) {
+        $ionicLoading.hide();
+        
         switch (error.code) {
           case 'INVALID_EMAIL':
             $scope.error = "The specified user account email is invalid.";
@@ -91,6 +102,13 @@ angular.module('app.controllers', [])
             Message.timedAlert('Error', $scope.error, 'short');
         }
       } else {
+        $ionicLoading.hide();
+
+        $ionicLoading.show({
+          template: 'Loading Prayer Lists...',
+          duration: 2000
+        });
+
         $state.go("app.prayerlists");
       }
     });
@@ -101,7 +119,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('SignupCtrl', function($scope, $state, $ionicHistory, Auth, Message) {
+.controller('SignupCtrl', function($scope, $state, $ionicHistory, $ionicLoading, Auth, Message) {
   var _usersRef = new Firebase('https://intense-torch-8571.firebaseio.com/users');
   
   // With the new view caching in Ionic, Controllers are only called
@@ -119,15 +137,22 @@ angular.module('app.controllers', [])
     $scope.error = null;
     
     if($scope.loginData.password == $scope.loginData.retype_password) {
+      $ionicLoading.show({
+        template: 'Creating User...'
+      });
       Auth.$createUser({
         email: $scope.loginData.email,
         password: $scope.loginData.password
       }).then(function(authData) {
+        $ionicLoading.hide();
+        
         $scope.message = "User created successfully. You may login now.";
         $state.go("login");
         
         Message.timedAlert('Success', $scope.message, 'short');
       }).catch(function(error) {
+        $ionicLoading.hide();
+        
         $scope.error = error;
         Message.timedAlert('Error', $scope.error, 'short');
       });
@@ -142,7 +167,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('AccountCtrl', function($scope, $state, $ionicHistory, $firebaseObject, Auth, Message) {
+.controller('AccountCtrl', function($scope, $state, $ionicHistory, $ionicLoading, $firebaseObject, Auth, Message) {
   
   // With the new view caching in Ionic, Controllers are only called
   // when they are recreated or on app start, instead of every page change.
@@ -170,15 +195,23 @@ angular.module('app.controllers', [])
     // Update email address
     if($scope.emailData.email !== $scope.emailData.new_email)
     {
+      $ionicLoading.show({
+        template: 'Saving Email...'
+      });
+      
       Auth.$changeEmail({
         oldEmail: $scope.emailData.email,
         newEmail: $scope.emailData.new_email,
         password: $scope.emailData.password
       }).then(function() {
+        $ionicLoading.hide();
+        
         $scope.emailData.email = $scope.emailData.new_email;
         $scope.message = "Email changed successfully!";
         Message.timedAlert('Success', $scope.message, 'short');
       }).catch(function(error) {
+        $ionicLoading.hide();
+        
         $scope.error = error;
         Message.timedAlert('Error', $scope.error, 'short');
       });
@@ -192,15 +225,23 @@ angular.module('app.controllers', [])
     // Update password
     if($scope.passwordData.new_password) {
       if($scope.passwordData.new_password == $scope.passwordData.retype_password) {
+        $ionicLoading.show({
+          template: 'Saving Password...'
+        });
+        
         Auth.$changePassword({
           email: $scope.emailData.email,
           oldPassword: $scope.passwordData.password,
           newPassword: $scope.passwordData.new_password
         }).then(function() {
+          $ionicLoading.hide();
+          
           $scope.passwordData = {};
           $scope.message = "Password changed successfully!";
           Message.timedAlert('Success', $scope.message, 'short');
         }).catch(function(error) {
+          $ionicLoading.hide();
+          
           $scope.error = error;
           Message.timedAlert('Error', $scope.error, 'short');
         });
@@ -228,21 +269,32 @@ angular.module('app.controllers', [])
           
           // 2. Remove user from users
           var obj = $firebaseObject(userRef);
+          
+          $ionicLoading.show({
+            template: 'Deleting Account...'
+          });
+        
           obj.$remove().then(function(ref) {
             // 3. Remove account from auth
             Auth.$removeUser({
               email: $scope.emailData.email,
               password: $scope.passwordData.password
             }).then(function() {
+              $ionicLoading.hide();
+              
               $scope.message = "Your account was successfully removed!";
               Message.timedAlert('Success', $scope.message, 'short');
               Auth.$unauth();
               $state.go('login');
             }).catch(function(error) {
+              $ionicLoading.hide();
+              
               $scope.error = error;
               Message.timedAlert('Error', $scope.error, 'long');
             });
           }, function(error) {
+            $ionicLoading.hide();
+            
             $scope.error = error;
             Message.timedAlert('Error', $scope.error, 'long');
           });
@@ -253,7 +305,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerListsCtrl', function($rootScope, $scope, $ionicModal, $ionicListDelegate, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerListsCtrl', function($rootScope, $scope, $ionicModal, $ionicListDelegate, $ionicLoading, $firebaseArray, $firebaseObject, Auth, Message) {
   $scope.pinnedonly = false;
   
   var authData = Auth.$getAuth();
@@ -291,7 +343,12 @@ angular.module('app.controllers', [])
       list.pinned = true;
     }
     
-    $scope.prayerlists.$save(list);
+    $scope.prayerlists.$save(list).then(function(ref) {
+      
+    }, function(error) {
+      $scope.error = error;
+      Message.timedAlert('Error', $scope.error, 'long');
+    });
   }
   
   $scope.newPrayerList = function() {
@@ -321,10 +378,26 @@ angular.module('app.controllers', [])
       desc: $scope.prayerListData.desc
     }
     
+    $ionicLoading.show({
+      template: 'Saving Prayer List...'
+    });
+    
     if($scope.newList) {
-      $scope.prayerlists.$add(list);
+      $scope.prayerlists.$add(list).then(function(ref) {
+        $ionicLoading.hide();
+      }, function(error) {
+        $ionicLoading.hide();
+        $scope.error = error;
+        Message.timedAlert('Error', $scope.error, 'long');
+      });
     } else {
-      $scope.prayerlists.$save($scope.prayerListData);
+      $scope.prayerlists.$save($scope.prayerListData).then(function(ref) {
+        $ionicLoading.hide();
+      }, function(error) {
+        $ionicLoading.hide();
+        $scope.error = error;
+        Message.timedAlert('Error', $scope.error, 'long');
+      });
     }
     
     $scope.modal.hide();
@@ -344,11 +417,19 @@ angular.module('app.controllers', [])
       negative_label: "NEVER MIND",
       callback: function(result) {
         if(result) {
+          $ionicLoading.show({
+            template: 'Deleting Prayer List...'
+          });
+          
           // 2. Remove list from user's prayer lists
           $scope.prayerlists.$remove(list).then(function(ref) {
+            $ionicLoading.hide();
+            
             $scope.message = "Your prayer list was successfully removed!";
             Message.timedAlert('Success', $scope.message, 'short');
           }, function(error) {
+            $ionicLoading.hide();
+            
             $scope.error = error;
             Message.timedAlert('Error', $scope.error, 'long');
           });
@@ -359,7 +440,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerListCtrl', function($scope, $state, $stateParams, $ionicModal, $ionicListDelegate, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerListCtrl', function($scope, $state, $stateParams, $ionicModal, $ionicListDelegate, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
   $scope.pinnedonly = false;
   $scope.prayerlistId = $stateParams.prayerlistId;
   
@@ -395,7 +476,12 @@ angular.module('app.controllers', [])
       card.pinned = true;
     }
     
-    $scope.prayercards.$save(card);
+    $scope.prayercards.$save(card).then(function(ref) {
+      
+    }, function(error) {
+      $scope.error = error;
+      Message.timedAlert('Error', $scope.error, 'long');
+    });
   }
 
   $scope.newPrayerCard = function() {
@@ -418,7 +504,17 @@ angular.module('app.controllers', [])
       comments: []
     }
     
-    $scope.prayercards.$add(card);
+    $ionicLoading.show({
+      template: 'Saving Prayer Card...'
+    });
+    
+    $scope.prayercards.$add(card).then(function(ref) {
+      $ionicLoading.hide();
+    }, function(error) {
+      $ionicLoading.hide();
+      $scope.error = error;
+      Message.timedAlert('Error', $scope.error, 'long');
+    });
 
     $scope.modal.hide();
     
@@ -443,11 +539,19 @@ angular.module('app.controllers', [])
       negative_label: "NEVER MIND",
       callback: function(result) {
         if(result) {
+          $ionicLoading.show({
+            template: 'Deleting Prayer Card...'
+          });
+          
           // 2. Remove list from user's prayer lists
           $scope.prayercards.$remove(card).then(function(ref) {
+            $ionicLoading.hide();
+            
             $scope.message = "Your prayer card was successfully removed!";
             Message.timedAlert('Success', $scope.message, 'short');
           }, function(error) {
+            $ionicLoading.hide();
+            
             $scope.error = error;
             Message.timedAlert('Error', $scope.error, 'long');
           });
@@ -458,7 +562,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerCardCtrl', function($scope, $stateParams, $ionicModal, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerCardCtrl', function($scope, $stateParams, $ionicModal, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
   $scope.prayerlistId = $stateParams.prayerlistId;
   $scope.prayercardId = $stateParams.prayercardId;
   
@@ -499,18 +603,31 @@ angular.module('app.controllers', [])
     
     $scope.data.comment = "";
 
+    $ionicLoading.show({
+      template: 'Saving Prayer Card...'
+    });
+    
     $scope.prayercard.$save().then(function(ref) {
-      
+      $ionicLoading.hide();
     }, function(error) {
+      $ionicLoading.hide();
       $scope.error = error;
       Message.timedAlert('Error', $scope.error, 'long');
     });
   };
   
   $scope.savePrayerCard = function() {
+    $ionicLoading.show({
+      template: 'Saving Prayer Card...'
+    });
+    
     $scope.prayercard.$save().then(function(ref) {
+      $ionicLoading.hide();
+      
       $scope.modal.hide();
     }, function(error) {
+      $ionicLoading.hide();
+      
       $scope.error = error;
       Message.timedAlert('Error', $scope.error, 'long');
     });
@@ -529,14 +646,22 @@ angular.module('app.controllers', [])
       negative_label: "NEVER MIND",
       callback: function(result) {
         if(result) {
-          // 2. Remove list from user's prayer lists
-          // $scope.prayercards.$remove(card).then(function(ref) {
-          //   $scope.message = "Your prayer card was successfully removed!";
-          //   Message.timedAlert('Success', $scope.message, 'short');
-          // }, function(error) {
-          //   $scope.error = error;
-          //   Message.timedAlert('Error', $scope.error, 'long');
-          // });
+          $ionicLoading.show({
+            template: 'Deleting Prayer Card...'
+          });
+    
+          // 2. Remove card from user's prayer lists
+          $scope.prayercard.$remove().then(function(ref) {
+            $ionicLoading.hide();
+            
+            $scope.message = "Your prayer card was successfully removed!";
+            Message.timedAlert('Success', $scope.message, 'short');
+          }, function(error) {
+            $ionicLoading.hide();
+            
+            $scope.error = error;
+            Message.timedAlert('Error', $scope.error, 'long');
+          });
         }
       }
     };
