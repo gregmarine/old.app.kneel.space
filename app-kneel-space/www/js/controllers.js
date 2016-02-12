@@ -476,11 +476,6 @@ angular.module('app.controllers', [])
     $scope.modal = modal;
   });
   
-  $scope.$on('$ionicView.enter', function() {
-    window._bhparse.push('body');
-    window._bhparse.push('comments');
-  });
-
   $scope.editPrayerCard = function() {
     if(!$scope.prayercard.comments) {
       $scope.prayercard.comments = [];
@@ -505,9 +500,7 @@ angular.module('app.controllers', [])
     $scope.data.comment = "";
 
     $scope.prayercard.$save().then(function(ref) {
-      $timeout(function() {
-        window._bhparse.push('comments');
-      }, 300);
+      
     }, function(error) {
       $scope.error = error;
       Message.timedAlert('Error', $scope.error, 'long');
@@ -517,11 +510,6 @@ angular.module('app.controllers', [])
   $scope.savePrayerCard = function() {
     $scope.prayercard.$save().then(function(ref) {
       $scope.modal.hide();
-      
-      $timeout(function() {
-        window._bhparse.push('body');
-        window._bhparse.push('comments');
-      }, 300);
     }, function(error) {
       $scope.error = error;
       Message.timedAlert('Error', $scope.error, 'long');
