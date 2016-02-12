@@ -274,6 +274,14 @@ angular.module('app.controllers', [])
     $scope.modal = modal;
   });
 
+  $scope.togglePinnedOnly = function() {
+    if($scope.pinnedonly) {
+      $scope.pinnedonly = false;
+    } else {
+      $scope.pinnedonly = true;
+    }
+  }
+
   $scope.pinPrayerList = function(list) {
     $ionicListDelegate.closeOptionButtons();
     
@@ -351,7 +359,8 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerListCtrl', function($scope, $stateParams, $ionicModal, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerListCtrl', function($scope, $state, $stateParams, $ionicModal, $ionicListDelegate, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+  $scope.pinnedonly = false;
   $scope.prayerlistId = $stateParams.prayerlistId;
   
   var authData = Auth.$getAuth();
@@ -362,22 +371,24 @@ angular.module('app.controllers', [])
   var cardListRef = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists/' + $scope.prayerlistId + '/cards');
   $scope.prayercards = $firebaseArray(cardListRef);
   
-  $scope.prayerCardData = {
-    title: "",
-    body: "",
-    comments: []
-  };
-  
-  $scope.data = {comment: ""};
-  
   $ionicModal.fromTemplateUrl('templates/edit-prayercard.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
     $scope.modal = modal;
   });
+  
+  $scope.togglePinnedOnly = function() {
+    if($scope.pinnedonly) {
+      $scope.pinnedonly = false;
+    } else {
+      $scope.pinnedonly = true;
+    }
+  }
 
   $scope.pinPrayerCard = function(card) {
+    $ionicListDelegate.closeOptionButtons();
+    
     if(card.pinned) {
       card.pinned = false;
     } else {
@@ -388,28 +399,11 @@ angular.module('app.controllers', [])
   }
 
   $scope.newPrayerCard = function() {
-    $scope.prayerCardData = {
+    $scope.prayercard = {
       title: "",
-      body: "",
-      comments: []
+      body: ""
     };
     
-    $scope.data.comment = "";
-  
-    $scope.newCard = true;
-    $scope.modal.show();
-  };
-  
-  $scope.editPrayerCard = function(card) {
-    $scope.newCard = false;
-    $scope.prayerCardData = card;
-    
-    if(!$scope.prayerCardData.comments) {
-      $scope.prayerCardData.comments = [];
-    }
-    
-    $scope.data.comment = "";
-  
     $scope.modal.show();
   };
   
@@ -417,37 +411,26 @@ angular.module('app.controllers', [])
     $scope.modal.hide();
   };
   
-  $scope.addComment = function() {
-    $scope.prayerCardData.comments.unshift({text: $scope.data.comment});
-    
-    $scope.data.comment = "";
-  };
-  
   $scope.savePrayerCard = function() {
     var card = {
-      title: $scope.prayerCardData.title,
-      body: $scope.prayerCardData.body,
-      comments: $scope.prayerCardData.comments
+      title: $scope.prayercard.title,
+      body: $scope.prayercard.body,
+      comments: []
     }
     
-    if($scope.newCard) {
-      $scope.prayercards.$add(card);
-    } else {
-      $scope.prayercards.$save($scope.prayerCardData);
-    }
-    
+    $scope.prayercards.$add(card);
+
     $scope.modal.hide();
     
-    $scope.prayerCardData = {
+    $scope.prayercard = {
       title: "",
-      desc: "",
-      comments: []
+      desc: ""
     };
-    
-    $scope.data.comment = "";
   };
   
   $scope.deleteCard = function(card) {
+    $ionicListDelegate.closeOptionButtons();
+    
     $scope.message = null;
     $scope.error = null;
     
@@ -468,6 +451,100 @@ angular.module('app.controllers', [])
             $scope.error = error;
             Message.timedAlert('Error', $scope.error, 'long');
           });
+        }
+      }
+    };
+    Message.confirm(options);
+  };
+})
+
+.controller('PrayerCardCtrl', function($scope, $stateParams, $ionicModal, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+  $scope.prayerlistId = $stateParams.prayerlistId;
+  $scope.prayercardId = $stateParams.prayercardId;
+  
+  var authData = Auth.$getAuth();
+  var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists/' + $scope.prayerlistId + '/cards/' + $scope.prayercardId);
+
+  $scope.prayercard = $firebaseObject(ref);
+
+  $scope.data = {comment: ""};
+  
+  $ionicModal.fromTemplateUrl('templates/edit-prayercard.html', {
+    scope: $scope,
+    animation: 'slide-in-up'
+  }).then(function(modal) {
+    $scope.modal = modal;
+  });
+  
+  $scope.$on('$ionicView.enter', function() {
+    window._bhparse.push('body');
+    window._bhparse.push('comments');
+  });
+
+  $scope.editPrayerCard = function() {
+    if(!$scope.prayercard.comments) {
+      $scope.prayercard.comments = [];
+    }
+    
+    $scope.data.comment = "";
+  
+    $scope.modal.show();
+  };
+  
+  $scope.closeModal = function() {
+    $scope.modal.hide();
+  };
+  
+  $scope.addComment = function() {
+    $scope.prayercard.comments.unshift({text: $scope.data.comment});
+    
+    $scope.data.comment = "";
+
+    $scope.prayercard.$save().then(function(ref) {
+      $timeout(function() {
+        window._bhparse.push('comments');
+      }, 300);
+    }, function(error) {
+      $scope.error = error;
+      Message.timedAlert('Error', $scope.error, 'long');
+    });
+  };
+  
+  $scope.savePrayerCard = function() {
+    $scope.prayercard.$save().then(function(ref) {
+      $scope.modal.hide();
+      
+      $timeout(function() {
+        window._bhparse.push('body');
+        window._bhparse.push('comments');
+      }, 300);
+    }, function(error) {
+      $scope.error = error;
+      Message.timedAlert('Error', $scope.error, 'long');
+    });
+  };
+  
+  $scope.deleteCard = function(card) {
+    $scope.message = null;
+    $scope.error = null;
+    
+    // 1. Confirm
+    var options = {
+      title: "Delete " + card.title,
+      subTitle: "Are you sure you would like to delete your " + card.title + " prayer card?",
+      message: "THIS CANNOT BE UNDONE!",
+      positive_label: "GOOD BYE!",
+      negative_label: "NEVER MIND",
+      callback: function(result) {
+        if(result) {
+          // 2. Remove list from user's prayer lists
+          // $scope.prayercards.$remove(card).then(function(ref) {
+          //   $scope.message = "Your prayer card was successfully removed!";
+          //   Message.timedAlert('Success', $scope.message, 'short');
+          // }, function(error) {
+          //   $scope.error = error;
+          //   Message.timedAlert('Error', $scope.error, 'long');
+          // });
         }
       }
     };

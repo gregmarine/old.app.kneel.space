@@ -1,0 +1,29 @@
+<ion-view view-title="Prayer Card">
+  <ion-nav-buttons side="secondary">
+    <button class="button button-clear icon ion-compose" ng-click="editPrayerCard()"></button>
+  </ion-nav-buttons>
+  <div class="bar bar-subheader">
+    <h2 class="title">{{prayercard.title}}</h2>
+  </div>
+  <ion-content>
+    
+    <div id="body" style="margin-top: 48px;"><md ng-model="prayercard.body"></md></div>
+    
+    <div class="list">
+      <!-- comments -->
+      <div id="comments">
+        <label class="item item-input item-floating-label">
+          <span class="input-label">New Comment</span>
+          <textarea ng-model="data.comment" placeholder="Write a Comment" style="height: 60px;"></textarea>
+        </label>
+        <div class="item">
+          <button class="button button-balanced" ng-click="addComment()">Save Comment</button>
+        </div>
+        <label class="item">
+          <span class="input-label">Comments</span>
+        </label>
+        <div ng-repeat="comment in prayercard.comments | filterPinned:pinnedonly" class="item item-text-wrap">{{comment.text}}</div>
+      </div>
+    </div>
+  </ion-content>
+</ion-view>

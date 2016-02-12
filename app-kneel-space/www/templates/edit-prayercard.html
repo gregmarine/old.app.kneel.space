@@ -6,31 +6,12 @@
     <div class="list">
       <label class="item item-input item-floating-label">
         <span class="input-label">Title</span>
-        <input type="text" ng-model="prayerCardData.title" placeholder="Title">
+        <input type="text" ng-model="prayercard.title" placeholder="Title">
       </label>
       <label class="item item-input item-floating-label">
         <span class="input-label">Body</span>
-        <textarea ng-model="prayerCardData.body" placeholder="Body" style="height: 100px;"></textarea>
+        <textarea ng-model="prayercard.body" placeholder="Body" style="height: 100px;"></textarea>
       </label>
-      
-      <!-- comments -->
-      <div>
-        <label class="item item-input item-floating-label">
-          <span class="input-label">New Comment</span>
-          <textarea ng-model="data.comment" placeholder="Write a Comment" style="height: 60px;"></textarea>
-        </label>
-        <div class="item">
-          <button class="button button-balanced" ng-click="addComment()">Save Comment</button>
-        </div>
-        <label class="item">
-          <span class="input-label">Comments</span>
-        </label>
-        <div collection-repeat="comment in prayerCardData.comments | filterPinned:pinnedonly" class="list">
-          <div class="item item-text-wrap">
-            {{comment.text}}
-          </div>
-        </div>
-      </div>
     </div>
   </ion-content>
   <ion-footer-bar class="text-right">
