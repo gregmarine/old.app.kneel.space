@@ -5,23 +5,9 @@
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
     <title></title>
     
-    <!-- Bibles.org Highlighter for scripture references. -->
-    <script id="bw-highlighter-config" data-version="NASB" data-autoparse="false">
-    (function(w, d, s, e, id) {
-      w._bhparse = w._bhparse || [];
-      function l() {
-        if (d.getElementById(id)) return;
-        var n = d.createElement(s), x = d.getElementsByTagName(s)[0];
-        n.id = id; n.async = true; n.src = '//bibles.org/linker/js/client.js';
-        x.parentNode.insertBefore(n, x);
-      }
-      (w.attachEvent) ? w.attachEvent('on' + e, l) : w.addEventListener(e, l, false);
-    })(window, document, 'script', 'load', 'bw-highlighter-src');
-    </script>
-
     <!-- compiled css output -->
     <link href="css/ionic.app.css" rel="stylesheet">
-
+    
     <!-- ionic/angularjs js -->
     <script src="lib/ionic/js/ionic.bundle.js"></script>
 
