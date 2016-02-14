@@ -90,3 +90,8 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
   display: inline-block;
   vertical-align: top;
 }
+
+.md-body ul {
+  list-style: initial;
+  padding: 20px;
+}

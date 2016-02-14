@@ -123,6 +123,23 @@ angular.module('app', ['ionic', 'firebase', 'yaru22.md', 'app.controllers', 'app
         }
       }
     }
+  })
+  
+  .state('app.prayerplan', {
+    url: '/prayerplan',
+    views: {
+      'menuContent': {
+        templateUrl: 'templates/prayerplan.html',
+        controller: 'PrayerPlanCtrl',
+        resolve: {
+          "currentAuth": ["Auth", function(Auth) {
+            // $requireAuth returns a promise so the resolve waits for it to complete
+            // If the promise is rejected, it will throw a $stateChangeError (see above)
+            return Auth.$requireAuth();
+          }]
+        }
+      }
+    }
   });
   
   // if none of the above states are matched, use this as the fallback

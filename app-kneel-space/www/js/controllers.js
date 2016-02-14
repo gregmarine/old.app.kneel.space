@@ -1,6 +1,6 @@
 angular.module('app.controllers', [])
 
-.controller('AppCtrl', function($rootScope, $scope, $ionicModal, $timeout, Auth) {
+.controller('AppCtrl', function($rootScope, $scope, $ionicLoading, $ionicModal, $timeout, Auth) {
   var _usersRef = new Firebase('https://intense-torch-8571.firebaseio.com/users');
   
   Auth.$onAuth(function(authData) {
@@ -440,7 +440,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerListCtrl', function($scope, $state, $stateParams, $ionicModal, $ionicListDelegate, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerListCtrl', function($scope, $state, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicListDelegate, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
   $scope.pinnedonly = false;
   $scope.prayerlistId = $stateParams.prayerlistId;
   
@@ -449,6 +449,12 @@ angular.module('app.controllers', [])
 
   $scope.prayerlist = $firebaseObject(ref);
   
+  $scope.$on('$ionicView.enter', function(e) {
+    $timeout(function() {
+      $ionicNavBarDelegate.title($scope.prayerlist.title);
+    });
+  });
+    
   var cardListRef = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists/' + $scope.prayerlistId + '/cards');
   $scope.prayercards = $firebaseArray(cardListRef);
   
@@ -562,7 +568,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerCardCtrl', function($scope, $stateParams, $ionicModal, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerCardCtrl', function($scope, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicHistory, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
   $scope.prayerlistId = $stateParams.prayerlistId;
   $scope.prayercardId = $stateParams.prayercardId;
   
@@ -570,6 +576,12 @@ angular.module('app.controllers', [])
   var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists/' + $scope.prayerlistId + '/cards/' + $scope.prayercardId);
 
   $scope.prayercard = $firebaseObject(ref);
+  
+  $scope.$on('$ionicView.enter', function(e) {
+    $timeout(function() {
+      $ionicNavBarDelegate.title($scope.prayercard.title);
+    });
+  });
     
   $scope.data = {comment: ""};
   
@@ -579,6 +591,10 @@ angular.module('app.controllers', [])
   }).then(function(modal) {
     $scope.modal = modal;
   });
+  
+  $scope.closePrayerCard = function() {
+    $ionicHistory.goBack();
+  }
   
   $scope.editPrayerCard = function() {
     if(!$scope.prayercard.comments) {
@@ -667,4 +683,8 @@ angular.module('app.controllers', [])
     };
     Message.confirm(options);
   };
+})
+
+.controller('PrayerPlanCtrl', function($scope, $state, $ionicHistory, $ionicLoading, Auth, Message) {
+  var authData = Auth.$getAuth();
 });

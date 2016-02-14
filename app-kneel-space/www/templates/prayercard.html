@@ -1,13 +1,13 @@
-<ion-view view-title="Prayer Card">
-  <ion-nav-buttons side="secondary">
+<ion-view view-title="Prayer Card" hide-back-button="true">
+  <ion-nav-buttons side="left">
+    <button class="button button-clear icon ion-android-close" ng-click="closePrayerCard()"></button>
+  </ion-nav-buttons>
+  <ion-nav-buttons side="right">
     <button class="button button-clear icon ion-compose" ng-click="editPrayerCard()"></button>
   </ion-nav-buttons>
-  <div class="bar bar-subheader">
-    <h2 class="title">{{prayercard.title}}</h2>
-  </div>
+  
   <ion-content>
-    
-    <div id="body" style="margin-top: 48px;"><md ng-model="prayercard.body"></md></div>
+    <div id="body"><md ng-model="prayercard.body" class="md-body"></md></div>
     
     <div class="list">
       <!-- comments -->

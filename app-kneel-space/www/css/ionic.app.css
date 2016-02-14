@@ -9793,3 +9793,7 @@ a.button {
   margin-bottom: -6px;
   display: inline-block;
   vertical-align: top; }
+
+.md-body ul {
+  list-style: initial;
+  padding: 20px; }
