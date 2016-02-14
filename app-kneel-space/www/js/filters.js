@@ -5,7 +5,7 @@ angular.module('app.filters', []).filter('filterPinned', function() {
 
    return function(objs, showPinnedOnly) {
      // if it is to show all, we just return the original array,
-     // if not, we go on and filter the lists in the same way.
+     // if not, we go on and filter the boxes in the same way.
      return !showPinnedOnly ? objs : objs.filter(isPinned);
    };
 })

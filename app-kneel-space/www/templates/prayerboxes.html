@@ -1,4 +1,4 @@
-<ion-view view-title="Prayer Lists">
+<ion-view view-title="Prayer Boxes">
   <ion-nav-buttons side="secondary">
     <!-- Pinned Only toggle -->
     <div class="text-right" ng-click="togglePinnedOnly()" style="margin-top: 5px;">
@@ -14,19 +14,19 @@
   </ion-nav-buttons>
   <ion-content>
     <ion-list can-swipe="true">
-      <ion-item ng-repeat="prayerlist in prayerlists | filterPinned:pinnedonly" href="#/app/prayerlists/{{prayerlist.$id}}">
-        <i class="icon {{prayerlist.pinned ? 'ion-pin positive' : 'ion-ios-list-outline'}} list-item-icon"></i>
-        {{prayerlist.title}}
+      <ion-item ng-repeat="prayerbox in prayerboxes | filterPinned:pinnedonly" href="#/app/prayerboxes/{{prayerbox.$id}}">
+        <i class="icon {{prayerbox.pinned ? 'ion-pin positive' : 'ion-ios-filing-outline'}} list-item-icon"></i>
+        {{prayerbox.title}}
         
         <!-- Action buttons -->
-        <ion-option-button class="button-assertive icon ion-trash-b" ng-click="deleteList(prayerlist)"></ion-option-button>
-        <ion-option-button class="button-balanced icon ion-compose" ng-click="editPrayerList(prayerlist)"></ion-option-button>
-        <ion-option-button class="button-positive icon ion-pin" ng-click="pinPrayerList(prayerlist)"></ion-option-button>
+        <ion-option-button class="button-assertive icon ion-trash-b" ng-click="deleteBox(prayerbox)"></ion-option-button>
+        <ion-option-button class="button-balanced icon ion-compose" ng-click="editPrayerBox(prayerbox)"></ion-option-button>
+        <ion-option-button class="button-positive icon ion-pin" ng-click="pinPrayerBox(prayerbox)"></ion-option-button>
       </ion-item>
     </ion-list>
   </ion-content>
   
-  <div class="float-button" ng-click="newPrayerList()">
+  <div class="float-button" ng-click="newPrayerBox()">
     <span class="height-fix">
       <a class="content">
         <i class="ion-plus"> </i>
@@ -35,24 +35,24 @@
   </div>
 </ion-view>
 
-<script id="edit-prayerlist.html" type="text/ng-template">
+<script id="edit-prayerbox.html" type="text/ng-template">
   <ion-modal-view>
     <ion-header-bar>
-      <h1 class="title">Prayer List</h1>
+      <h1 class="title">Prayer Box</h1>
     </ion-header-bar>
     <ion-content>
       <div class="list">
         <label class="item item-input item-floating-label">
           <span class="input-label">Title</span>
-          <input type="text" ng-model="prayerListData.title" placeholder="Title">
+          <input type="text" ng-model="prayerBoxData.title" placeholder="Title">
         </label>
         <label class="item item-input item-floating-label">
           <span class="input-label">Description</span>
-          <textarea ng-model="prayerListData.desc" placeholder="Description" style="height: 100px;"></textarea>
+          <textarea ng-model="prayerBoxData.desc" placeholder="Description" style="height: 100px;"></textarea>
         </label>
         <div class="item text-right">
           <button class="button button-clear button-dark" ng-click="closeModal()">CANCEL</button>
-          <button class="button button-clear button-balanced" ng-click="savePrayerList()">OK</button>
+          <button class="button button-clear button-balanced" ng-click="savePrayerBox()">OK</button>
         </div>
       </div>
     </ion-content>
