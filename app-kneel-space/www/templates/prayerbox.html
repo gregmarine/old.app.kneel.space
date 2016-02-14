@@ -15,10 +15,10 @@
   
   <ion-content>
     
-    {{prayerlist.desc}}
+    {{prayerbox.desc}}
     
     <ion-list can-swipe="true">
-      <ion-item ng-repeat="prayercard in prayercards | filterPinned:pinnedonly" href="#/app/prayerlists/{{prayerlist.$id}}/cards/{{prayercard.$id}}">
+      <ion-item ng-repeat="prayercard in prayercards | filterPinned:pinnedonly" href="#/app/prayerboxes/{{prayerbox.$id}}/cards/{{prayercard.$id}}">
         <i class="icon {{prayercard.pinned ? 'ion-pin positive' : 'ion-ios-photos-outline'}} list-item-icon"></i>
         {{prayercard.title}}
         
@@ -30,7 +30,7 @@
         
         <!-- Action buttons -->
         <ion-option-button class="button-assertive icon ion-trash-b" ng-click="deleteCard(prayercard)"></ion-option-button>
-        <!--<ion-option-button class="button-balanced icon ion-compose" ng-click="openPrayerCard(prayerlist.$id, prayercard.$id)"></ion-option-button>-->
+        <!--<ion-option-button class="button-balanced icon ion-compose" ng-click="openPrayerCard(prayerbox.$id, prayercard.$id)"></ion-option-button>-->
         <ion-option-button class="button-positive icon ion-pin" ng-click="pinPrayerCard(prayercard)"></ion-option-button>
       </ion-item>
     </ion-list>

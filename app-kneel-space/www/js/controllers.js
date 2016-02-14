@@ -55,7 +55,7 @@ angular.module('app.controllers', [])
   var _usersRef = new Firebase('https://intense-torch-8571.firebaseio.com/users');
   
   if(Auth.$getAuth()) {
-    $state.go('app.playlists');
+    $state.go('app.prayerboxes');
   }
   
   // With the new view caching in Ionic, Controllers are only called
@@ -105,11 +105,11 @@ angular.module('app.controllers', [])
         $ionicLoading.hide();
 
         $ionicLoading.show({
-          template: 'Loading Prayer Lists...',
+          template: 'Loading Prayer Boxes...',
           duration: 2000
         });
 
-        $state.go("app.prayerlists");
+        $state.go("app.prayerboxes");
       }
     });
   };
@@ -305,21 +305,21 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerListsCtrl', function($rootScope, $scope, $ionicModal, $ionicListDelegate, $ionicLoading, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerBoxsCtrl', function($rootScope, $scope, $ionicModal, $ionicListDelegate, $ionicLoading, $firebaseArray, $firebaseObject, Auth, Message) {
   $scope.pinnedonly = false;
   
   var authData = Auth.$getAuth();
-  var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists');
+  var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerboxes');
   
   var query = ref.orderByChild("title");
-  $scope.prayerlists = $firebaseArray(query);
+  $scope.prayerboxes = $firebaseArray(query);
   
-  $scope.prayerListData = {
+  $scope.prayerBoxData = {
     title: "",
     desc: ""
   };
   
-  $ionicModal.fromTemplateUrl('edit-prayerlist.html', {
+  $ionicModal.fromTemplateUrl('edit-prayerbox.html', {
     scope: $scope,
     animation: 'slide-in-up'
   }).then(function(modal) {
@@ -334,16 +334,16 @@ angular.module('app.controllers', [])
     }
   }
 
-  $scope.pinPrayerList = function(list) {
+  $scope.pinPrayerBox = function(box) {
     $ionicListDelegate.closeOptionButtons();
     
-    if(list.pinned) {
-      list.pinned = false;
+    if(box.pinned) {
+      box.pinned = false;
     } else {
-      list.pinned = true;
+      box.pinned = true;
     }
     
-    $scope.prayerlists.$save(list).then(function(ref) {
+    $scope.prayerboxes.$save(box).then(function(ref) {
       
     }, function(error) {
       $scope.error = error;
@@ -351,20 +351,20 @@ angular.module('app.controllers', [])
     });
   }
   
-  $scope.newPrayerList = function() {
-    $scope.prayerListData = {
+  $scope.newPrayerBox = function() {
+    $scope.prayerBoxData = {
       title: "",
       desc: ""
     };
     
-    $scope.newList = true;
+    $scope.newBox = true;
     $scope.modal.show();
   };
   
-  $scope.editPrayerList = function(list) {
+  $scope.editPrayerBox = function(box) {
     $ionicListDelegate.closeOptionButtons();
-    $scope.newList = false;
-    $scope.prayerListData = list;
+    $scope.newBox = false;
+    $scope.prayerBoxData = box;
     $scope.modal.show();
   };
   
@@ -372,18 +372,18 @@ angular.module('app.controllers', [])
     $scope.modal.hide();
   };
   
-  $scope.savePrayerList = function() {
-    var list = {
-      title: $scope.prayerListData.title,
-      desc: $scope.prayerListData.desc
+  $scope.savePrayerBox = function() {
+    var box = {
+      title: $scope.prayerBoxData.title,
+      desc: $scope.prayerBoxData.desc
     }
     
     $ionicLoading.show({
-      template: 'Saving Prayer List...'
+      template: 'Saving Prayer Box...'
     });
     
-    if($scope.newList) {
-      $scope.prayerlists.$add(list).then(function(ref) {
+    if($scope.newBox) {
+      $scope.prayerboxes.$add(box).then(function(ref) {
         $ionicLoading.hide();
       }, function(error) {
         $ionicLoading.hide();
@@ -391,7 +391,7 @@ angular.module('app.controllers', [])
         Message.timedAlert('Error', $scope.error, 'long');
       });
     } else {
-      $scope.prayerlists.$save($scope.prayerListData).then(function(ref) {
+      $scope.prayerboxes.$save($scope.prayerBoxData).then(function(ref) {
         $ionicLoading.hide();
       }, function(error) {
         $ionicLoading.hide();
@@ -403,29 +403,29 @@ angular.module('app.controllers', [])
     $scope.modal.hide();
   };
   
-  $scope.deleteList = function(list) {
+  $scope.deleteBox = function(box) {
     $ionicListDelegate.closeOptionButtons();
     $scope.message = null;
     $scope.error = null;
     
     // 1. Confirm
     var options = {
-      title: "Delete " + list.title,
-      subTitle: "Are you sure you would like to delete your " + list.title + " prayer list?",
+      title: "Delete " + box.title,
+      subTitle: "Are you sure you would like to delete your " + box.title + " prayer box?",
       message: "THIS CANNOT BE UNDONE!",
       positive_label: "GOOD BYE!",
       negative_label: "NEVER MIND",
       callback: function(result) {
         if(result) {
           $ionicLoading.show({
-            template: 'Deleting Prayer List...'
+            template: 'Deleting Prayer Box...'
           });
           
-          // 2. Remove list from user's prayer lists
-          $scope.prayerlists.$remove(list).then(function(ref) {
+          // 2. Remove box from user's prayer boxes
+          $scope.prayerboxes.$remove(box).then(function(ref) {
             $ionicLoading.hide();
             
-            $scope.message = "Your prayer list was successfully removed!";
+            $scope.message = "Your prayer box was successfully removed!";
             Message.timedAlert('Success', $scope.message, 'short');
           }, function(error) {
             $ionicLoading.hide();
@@ -440,22 +440,22 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerListCtrl', function($scope, $state, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicListDelegate, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerBoxCtrl', function($scope, $state, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicListDelegate, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
   $scope.pinnedonly = false;
-  $scope.prayerlistId = $stateParams.prayerlistId;
+  $scope.prayerboxId = $stateParams.prayerboxId;
   
   var authData = Auth.$getAuth();
-  var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists/' + $scope.prayerlistId);
+  var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerboxes/' + $scope.prayerboxId);
 
-  $scope.prayerlist = $firebaseObject(ref);
+  $scope.prayerbox = $firebaseObject(ref);
   
   $scope.$on('$ionicView.enter', function(e) {
     $timeout(function() {
-      $ionicNavBarDelegate.title($scope.prayerlist.title);
+      $ionicNavBarDelegate.title($scope.prayerbox.title);
     });
   });
     
-  var cardListRef = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists/' + $scope.prayerlistId + '/cards');
+  var cardListRef = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerboxes/' + $scope.prayerboxId + '/cards');
   $scope.prayercards = $firebaseArray(cardListRef);
   
   $ionicModal.fromTemplateUrl('templates/edit-prayercard.html', {
@@ -549,7 +549,7 @@ angular.module('app.controllers', [])
             template: 'Deleting Prayer Card...'
           });
           
-          // 2. Remove list from user's prayer lists
+          // 2. Remove box from user's prayer boxes
           $scope.prayercards.$remove(card).then(function(ref) {
             $ionicLoading.hide();
             
@@ -569,11 +569,11 @@ angular.module('app.controllers', [])
 })
 
 .controller('PrayerCardCtrl', function($scope, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicHistory, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
-  $scope.prayerlistId = $stateParams.prayerlistId;
+  $scope.prayerboxId = $stateParams.prayerboxId;
   $scope.prayercardId = $stateParams.prayercardId;
   
   var authData = Auth.$getAuth();
-  var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerlists/' + $scope.prayerlistId + '/cards/' + $scope.prayercardId);
+  var ref = new Firebase('https://intense-torch-8571.firebaseio.com/users/' + authData.uid + '/prayerboxes/' + $scope.prayerboxId + '/cards/' + $scope.prayercardId);
 
   $scope.prayercard = $firebaseObject(ref);
   
@@ -666,7 +666,7 @@ angular.module('app.controllers', [])
             template: 'Deleting Prayer Card...'
           });
     
-          // 2. Remove card from user's prayer lists
+          // 2. Remove card from user's prayer boxes
           $scope.prayercard.$remove().then(function(ref) {
             $ionicLoading.hide();
             

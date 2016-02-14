@@ -74,12 +74,12 @@ angular.module('app', ['ionic', 'firebase', 'yaru22.md', 'app.controllers', 'app
     }
   })
 
-  .state('app.prayerlists', {
-    url: '/prayerlists',
+  .state('app.prayerboxes', {
+    url: '/prayerboxes',
     views: {
       'menuContent': {
-        templateUrl: 'templates/prayerlists.html',
-        controller: 'PrayerListsCtrl',
+        templateUrl: 'templates/prayerboxes.html',
+        controller: 'PrayerBoxsCtrl',
         resolve: {
           "currentAuth": ["Auth", function(Auth) {
             // $requireAuth returns a promise so the resolve waits for it to complete
@@ -91,12 +91,12 @@ angular.module('app', ['ionic', 'firebase', 'yaru22.md', 'app.controllers', 'app
     }
   })
 
-  .state('app.prayerlist', {
-    url: '/prayerlists/:prayerlistId',
+  .state('app.prayerbox', {
+    url: '/prayerboxes/:prayerboxId',
     views: {
       'menuContent': {
-        templateUrl: 'templates/prayerlist.html',
-        controller: 'PrayerListCtrl',
+        templateUrl: 'templates/prayerbox.html',
+        controller: 'PrayerBoxCtrl',
         resolve: {
           "currentAuth": ["Auth", function(Auth) {
             // $requireAuth returns a promise so the resolve waits for it to complete
@@ -109,7 +109,7 @@ angular.module('app', ['ionic', 'firebase', 'yaru22.md', 'app.controllers', 'app
   })
   
   .state('app.prayercard', {
-    url: '/prayerlists/:prayerlistId/cards/:prayercardId',
+    url: '/prayerboxes/:prayerboxId/cards/:prayercardId',
     views: {
       'menuContent': {
         templateUrl: 'templates/prayercard.html',
@@ -143,5 +143,5 @@ angular.module('app', ['ionic', 'firebase', 'yaru22.md', 'app.controllers', 'app
   });
   
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/prayerlists');
+  $urlRouterProvider.otherwise('/app/prayerboxes');
 });
