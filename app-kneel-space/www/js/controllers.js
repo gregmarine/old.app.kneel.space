@@ -440,7 +440,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerBoxCtrl', function($scope, $state, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicListDelegate, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerBoxCtrl', function($scope, $state, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicListDelegate, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, moment, Auth, Message) {
   $scope.pinnedonly = false;
   $scope.prayerboxId = $stateParams.prayerboxId;
   
@@ -507,6 +507,8 @@ angular.module('app.controllers', [])
     var card = {
       title: $scope.prayercard.title,
       body: $scope.prayercard.body,
+      created: moment().format(),
+      modified: moment().format(),
       comments: []
     }
     
@@ -568,7 +570,7 @@ angular.module('app.controllers', [])
   };
 })
 
-.controller('PrayerCardCtrl', function($scope, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicHistory, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, Auth, Message) {
+.controller('PrayerCardCtrl', function($scope, $stateParams, $ionicNavBarDelegate, $ionicModal, $ionicHistory, $ionicLoading, $timeout, $firebaseArray, $firebaseObject, moment, Auth, Message) {
   $scope.prayerboxId = $stateParams.prayerboxId;
   $scope.prayercardId = $stateParams.prayercardId;
   
@@ -614,14 +616,21 @@ angular.module('app.controllers', [])
     if(!$scope.prayercard.comments) {
       $scope.prayercard.comments = [];
     }
+    
+    var newComment = {
+      text: $scope.data.comment,
+      created: moment().format()
+    };
 
-    $scope.prayercard.comments.unshift({text: $scope.data.comment});
+    $scope.prayercard.comments.unshift(newComment);
     
     $scope.data.comment = "";
 
     $ionicLoading.show({
       template: 'Saving Prayer Card...'
     });
+    
+    $scope.prayercard.modified = moment().format();
     
     $scope.prayercard.$save().then(function(ref) {
       $ionicLoading.hide();
@@ -636,6 +645,8 @@ angular.module('app.controllers', [])
     $ionicLoading.show({
       template: 'Saving Prayer Card...'
     });
+    
+    $scope.prayercard.modified = moment().format();
     
     $scope.prayercard.$save().then(function(ref) {
       $ionicLoading.hide();
