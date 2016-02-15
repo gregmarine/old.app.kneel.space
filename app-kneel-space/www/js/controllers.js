@@ -530,7 +530,7 @@ angular.module('app.controllers', [])
     };
   };
   
-  $scope.deleteCard = function(card) {
+  $scope.deletePrayerCard = function(card) {
     $ionicListDelegate.closeOptionButtons();
     
     $scope.message = null;
